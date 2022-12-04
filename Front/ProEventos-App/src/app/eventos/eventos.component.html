@@ -20,6 +20,7 @@
         <th>
           <button type="button" class="btn btn-sm btn-outline-light" (click)="exibirImagem = !exibirImagem"
           [attr.aria-expanded]="!exibirImagem" aria-controls="collapseBasic">{{exibirImagem ? 'exibir': 'ocultar' }}
+          <i class="{{exibirImagem ? 'fa fa-eye': 'fa fa-eye-slash' }}"></i>
           </button>
         </th>
         <th>#</th>
@@ -38,15 +39,21 @@
         [style.width.px]="imagemLargura"
         [style.margin.px]="imagemMargem">
       </td>
-      <td>{{ev.eventoId}}</td>
+      <td>{{ev.id}}</td>
       <td>{{ev.tema}}</td>
       <td>{{ev.local}}</td>
-      <td>{{ev.dataEvento}}</td>
+      <td>{{ev.dataEvento | DateFormatPipe}}</td>
       <td>{{ev.qtdPessoas}}</td>
-      <td>{{ev.lote}}</td>
+      <td><!-- {{ev.lotes[0]?.nome | uppercase}} --></td>
       <td class="text-center">
-        <button type="button" class="btn btn-primary btn-sm mr-1">editar</button>
-        <button type="button" class="btn btn-danger btn-sm">excluir</button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary btn-sm" tooltip="Editar">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
+            <i class="fa fa-trash"></i>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
@@ -58,3 +65,11 @@
 </table>
 
 <!-- {{eventosFiltrados | json}} -->
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Tem certeza que quer deletar este Evento?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
