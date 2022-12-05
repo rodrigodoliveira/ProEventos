@@ -1,74 +1,10 @@
-<app-titulo [titulo]="tituloTela"></app-titulo>
 
-<div class="form-inline">
-  <div class="form-group mb-2">
-    <label for="" class="mr-2">Filtro</label>
-    <input
-      type="text"
-      class="form-control mr-2"
-      placeholder="buscar"
-      [(ngModel)]="FiltroLista"
-      >
-  </div>
-</div>
+<app-titulo
+[tituloPrincipal]="'Eventos'"
+[subtitulo]="'Gestão de eventos'"
+[iconClass]="'fa fa-calendar-alt'"
+[exibeBotao] = "true"
+[link]="'lista'">
+</app-titulo>
 
-<table class="table table-striped">
-  <thead class="thead-dark">
-
-      <tr>
-        <th>
-          <button type="button" class="btn btn-sm btn-outline-light" (click)="exibirImagem = !exibirImagem"
-          [attr.aria-expanded]="!exibirImagem" aria-controls="collapseBasic">{{exibirImagem ? 'exibir': 'ocultar' }}
-          <i class="{{exibirImagem ? 'fa fa-eye': 'fa fa-eye-slash' }}"></i>
-          </button>
-        </th>
-        <th>#</th>
-        <th>Tema</th>
-        <th>Local</th>
-        <th>Data</th>
-        <th>Qtd Pessoas</th>
-        <th>Lote</th>
-        <th class="text-center">Opções</th>
-      </tr>
-  </thead>
-  <tbody *ngIf="eventosFiltrados && eventosFiltrados.length">
-    <tr *ngFor="let ev of eventosFiltrados">
-      <td>
-        <img [collapse]="exibirImagem" [isAnimated]="true" id="collapseBasic"  src="/assets/images/{{ev.imageUrl}}"
-        [style.width.px]="imagemLargura"
-        [style.margin.px]="imagemMargem">
-      </td>
-      <td>{{ev.id}}</td>
-      <td>{{ev.tema}}</td>
-      <td>{{ev.local}}</td>
-      <td>{{ev.dataEvento | DateFormatPipe}}</td>
-      <td>{{ev.qtdPessoas}}</td>
-      <td><!-- {{ev.lotes[0]?.nome | uppercase}} --></td>
-      <td class="text-center">
-        <div class="btn-group">
-          <button type="button" class="btn btn-primary btn-sm" tooltip="Editar">
-            <i class="fa fa-edit"></i>
-          </button>
-          <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
-            <i class="fa fa-trash"></i>
-          </button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot *ngIf="!eventosFiltrados.length">
-    <tr colsapn="8">
-      <h5>Nenhum evento econtrado</h5>
-    </tr>
-  </tfoot>
-</table>
-
-<!-- {{eventosFiltrados | json}} -->
-
-<ng-template #template>
-  <div class="modal-body text-center">
-    <p>Tem certeza que quer deletar este Evento?</p>
-    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
-    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
-  </div>
-</ng-template>
+<router-outlet></router-outlet>
