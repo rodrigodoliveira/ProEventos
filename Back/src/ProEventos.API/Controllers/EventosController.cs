@@ -118,7 +118,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 return await _eventoService.Remove(id)
-                    ? Ok("Evento exclido com sucesso")
+                    ? Ok(new { message = "Deletado" })
                     : NoContent();
             }
             catch (Exception ex)

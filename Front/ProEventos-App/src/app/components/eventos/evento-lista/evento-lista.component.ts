@@ -22,6 +22,7 @@ export class EventoListaComponent implements OnInit {
   public imagemLargura = 150;
   public imagemMargem = 2;
   public exibirImagem = false;
+  public eventoId = 0;
   private filtroListado = '';
 
   public get FiltroLista(): string {
@@ -41,34 +42,34 @@ export class EventoListaComponent implements OnInit {
     private router: Router) { }
 
   public ngOnInit(): void {
-    this.getEventos();
+    this.carregarEventos();
 
     this.spinner.show();
   }
 
-  public getEventos(): void {
+  public carregarEventos(): void {
 
     this.eventoService.getEventos().subscribe({
-        next: (eventos: Evento[]) => {
-          this.eventosOriginal = eventos;
-          this.eventosFiltrados = this.eventosOriginal;
-        },
-        error: (err: any) => {
-          this.spinner.hide()
-          this.showError('Erro ao carregar eventos', 'Erro');
-          console.error(err.message);
-        },
-        complete:() => {
-          this.spinner.hide();
-        }
-      });
+      next: (eventos: Evento[]) => {
+        this.eventosOriginal = eventos;
+        this.eventosFiltrados = this.eventosOriginal;
+      },
+      error: (err: any) => {
+        this.spinner.hide()
+        this.showError('Erro ao carregar eventos', 'Erro');
+        console.error(err.message);
+      },
+      complete: () => {
+        this.spinner.hide();
+      }
+    });
   }
 
   public filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventosOriginal.filter(
       (ev: Evento) =>
-      (ev.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 || ev.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1));
+        (ev.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 || ev.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1));
   }
 
   public showSuccess(mensagem: string, titulo: string): void {
@@ -78,18 +79,39 @@ export class EventoListaComponent implements OnInit {
     this.toastr.error(mensagem, titulo);
   }
 
-  public openModal(template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  public openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
+    event.stopPropagation();
+    this.eventoId = eventoId;
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   public confirm(): void {
     this.modalRef.hide();
-    this.showSuccess("Evento excluído com sucesso", "Delete")
+    this.spinner.show();
+
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result: any) => {
+        if (result.message === 'Deletado') {
+          this.spinner.hide();
+          this.toastr.success('Evento deletado com sucesso.', 'Delete');
+          this.carregarEventos();
+        }
+      },
+      (erro: any) => {
+        this.spinner.hide();
+        this.toastr.error(`Erro ao tentar deletar evento de codigo ${this.eventoId}'`, 'Delete');
+        console.error(erro);
+      },
+      () => {
+        this.spinner.hide();
+      }
+    )
+
   }
 
   public decline(): void {
-    console.log('Não confirme');
     this.modalRef.hide();
+    this.eventoId = 0;
   }
 
   public detalheEvento(id: number): void {

@@ -25,7 +25,6 @@ namespace ProEventos.Application.Dtos
         public string DataEvento { get; set; }
 
         [Display(Name = "Imagem")]
-        [RegularExpression(@"[^\\s]+(.*?)\\.(jpg|jpeg|png|gif|JPG|JPEG|PNG|GIF)$", ErrorMessage = "Imagem inválida. Tipo aceitos: jpg,jpeg,png,gif")]
         public string ImageUrl { get; set; }
 
         [Required(ErrorMessage = "{0} é orbrigatorio"),
