@@ -6,7 +6,7 @@ export interface Evento {
 
   id: number;
   local: string;
-  dataEvento: Date;
+  dataEvento?: Date;
   tema: string;
   qtdPessoas: number;
   imageUrl: string;

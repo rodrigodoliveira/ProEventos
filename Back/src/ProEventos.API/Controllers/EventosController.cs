@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Contracts;
@@ -118,7 +116,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 return await _eventoService.Remove(id)
-                    ? Ok(new { message = "Deletado" })
+                    ? Ok(new { message = "Evento deletado" })
                     : NoContent();
             }
             catch (Exception ex)

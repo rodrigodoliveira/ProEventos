@@ -17,7 +17,6 @@ import { AppComponent } from './app.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { PalestrantesComponent } from './components/palestrantes/palestrantes.component';
 import { NavComponent } from './shared/nav/nav.component';
-import { EventoService } from './services/evento.service';
 import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -30,6 +29,11 @@ import { EventoListaComponent } from './components/eventos/evento-lista/evento-l
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
+
+import { EventoService } from './services/evento.service';
+import { LoteService } from './services/lote.service';
+import { NgxCurrencyModule } from 'ngx-currency';
+import { Constants } from './util/constants';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -69,10 +73,12 @@ defineLocale('pt-br', ptBrLocale);
     NgxSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    NgxCurrencyModule.forRoot(Constants.CustomCurrencyMaskConfig),
   ],
   providers: [
-    EventoService
+    EventoService,
+    LoteService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]

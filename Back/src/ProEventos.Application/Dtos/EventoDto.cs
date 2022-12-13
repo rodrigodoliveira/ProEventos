@@ -22,7 +22,7 @@ namespace ProEventos.Application.Dtos
         public int QtdPessoas { get; set; }
 
         [Required(ErrorMessage = "{0} é orbrigatorio")]
-        public string DataEvento { get; set; }
+        public DateTime DataEvento { get; set; }
 
         [Display(Name = "Imagem")]
         public string ImageUrl { get; set; }
