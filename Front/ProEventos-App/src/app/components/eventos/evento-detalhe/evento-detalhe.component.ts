@@ -12,6 +12,7 @@ import { Lote } from 'src/app/models/Lote';
 
 import { EventoService } from 'src/app/services/evento.service';
 import { LoteService } from 'src/app/services/lote.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -28,6 +29,8 @@ export class EventoDetalheComponent implements OnInit {
   evento = {} as Evento;
   form: FormGroup = new FormGroup({});
   modoSalvar = 'post';
+  imagemURL = 'assets/images/upload.png'
+  file: File
 
   get f(): any {
 
@@ -79,7 +82,13 @@ export class EventoDetalheComponent implements OnInit {
     this.carregarEvento();
   }
 
-  public retornaNomeLote(nome: string): string{
+  public openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
+    event.stopPropagation();
+    this.eventoId = eventoId;
+    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+  }
+
+  public retornaNomeLote(nome: string): string {
     return nome === null || nome === ''
       ? 'Nome do lote'
       : nome;
@@ -94,7 +103,7 @@ export class EventoDetalheComponent implements OnInit {
       qtdPessoas: ['', [Validators.required, Validators.max(120000), Validators.min(1)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imageUrl: ['', Validators.required],
+      imageUrl: [''],
       lotes: this.fb.array([]) //sub form dentro do form principal
     });
   }
@@ -103,7 +112,7 @@ export class EventoDetalheComponent implements OnInit {
     this.lotes.push(this.criarLote({ id: 0 } as Lote)); //cria um novo form de lote e adiciona ao form principal
   }
 
-  public mudarValorData(data: Date, i: number, campo: string) : void {
+  public mudarValorData(data: Date, i: number, campo: string): void {
     this.lotes.value[i][campo] = data
   }
 
@@ -143,7 +152,12 @@ export class EventoDetalheComponent implements OnInit {
         (ev: Evento) => {
           this.evento = { ...ev };
           this.form.patchValue(this.evento); //faz o bind do form com os campos do evento
+          if (this.evento.imageUrl != "") {
+            this.imagemURL = environment.apiURL + '/resources/images/' + this.evento.imageUrl
+          }
+
           this.carregarLotes();
+
         },
         (erro: any) => {
           this.toastr.error('Houve um erro ao tentar carregar os eventos');
@@ -258,6 +272,31 @@ export class EventoDetalheComponent implements OnInit {
 
   public decline() {
     this.modalRef.hide();
+  }
+
+  public onFileChange(ev: any): void {
+    const reader = new FileReader();
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImage()
+
+  }
+
+  public uploadImage(): void {
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+      (evento: Evento) => {
+        this.carregarEvento();
+        this.toastr.success("Imagem atualizada com sucesso");
+      },
+      (error: any) => {
+        this.toastr.error("Houve um erro ao tentar fazer o upload da imagem");
+        console.error(error);
+      }
+    ).add(() => this.spinner.hide());
   }
 
 }

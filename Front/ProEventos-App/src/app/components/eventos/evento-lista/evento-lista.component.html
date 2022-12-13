@@ -60,7 +60,7 @@
             [collapse]="exibirImagem"
             [isAnimated]="true"
             id="collapseBasic"
-            src="/assets/images/{{ ev.imageUrl }}"
+            [src]="retornaImagem(ev.imageUrl)"
             [style.width.px]="imagemLargura"
             [style.margin.px]="imagemMargem"
           />
@@ -79,7 +79,7 @@
               type="button"
               class="btn btn-danger btn-sm"
               tooltip="Excluir"
-              (click)="removerLote($event, template, ev.id)"
+              (click)="openModal($event, template, ev.id)"
             >
               <i class="fa fa-trash"></i>
             </button>

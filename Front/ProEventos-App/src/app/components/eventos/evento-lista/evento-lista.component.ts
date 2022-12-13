@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Evento } from 'src/app/models/Evento';
 import { EventoService } from 'src/app/services/evento.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-evento-lista',
@@ -45,6 +46,12 @@ export class EventoListaComponent implements OnInit {
     this.carregarEventos();
 
     this.spinner.show();
+  }
+
+  public retornaImagem(imageUrl: string): string {
+    return imageUrl !== ''
+      ? `${environment.apiURL}/resources/images/${imageUrl}`
+      : `assets/images/semimagem.png`
   }
 
   public carregarEventos(): void {
@@ -91,7 +98,7 @@ export class EventoListaComponent implements OnInit {
 
     this.eventoService.deleteEvento(this.eventoId).subscribe(
       (result: any) => {
-        if (result.message === 'Deletado') {
+        if (result.message === 'Evento deletado') {
           this.spinner.hide();
           this.toastr.success('Evento deletado com sucesso.', 'Delete');
           this.carregarEventos();
