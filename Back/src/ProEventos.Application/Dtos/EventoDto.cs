@@ -35,6 +35,9 @@ namespace ProEventos.Application.Dtos
         [EmailAddress(ErrorMessage = "{0} é inválido"), Required(ErrorMessage = "{0} é obrigatório")]
         public string Email { get; set; }
 
+        public int UserId { get; set; }
+        public UserDto User { get; set; }
+
         public IEnumerable<LoteDto> Lotes { get; set; }
         public IEnumerable<RedeSocialDto> RedesSociais { get; set; }
         public IEnumerable<PalestranteDto> Palestrantes { get; set; }

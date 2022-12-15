@@ -12,27 +12,27 @@ namespace ProEventos.Persistence
             this._context = context;
 
         }
-        public void Add<T>(T entity) where T : class
+        public virtual void Add<T>(T entity) where T : class
         {
             _context.Add(entity);
         }
 
-        public void Delete<T>(T entity) where T : class
+        public virtual void Delete<T>(T entity) where T : class
         {
             _context.Remove(entity);
         }
 
-        public void DeleteRange<T>(T[] entities) where T : class
+        public virtual void DeleteRange<T>(T[] entities) where T : class
         {
             _context.RemoveRange(entities);
         }
 
-        public void Update<T>(T entity) where T : class
+        public virtual void Update<T>(T entity) where T : class
         {
             _context.Update(entity);
         }
 
-        public async Task<bool> SaveChangesAsync()
+        public virtual async Task<bool> SaveChangesAsync()
         {
             return (await _context.SaveChangesAsync()) > 0;
         }
