@@ -43,16 +43,16 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<UserDto> CreateAccountAsync(UserDto userDto)
+        public async Task<UserUpdateDto> CreateAccountAsync(UserUpdateDto userUpdateDto)
         {
             try
             {
-                var user = _mapper.Map<User>(userDto);
-                var result = await _userManager.CreateAsync(user, userDto.Password);
+                var user = _mapper.Map<User>(userUpdateDto);
+                var result = await _userManager.CreateAsync(user, userUpdateDto.Password);
 
                 if (result.Succeeded)
                 {
-                    return _mapper.Map<UserDto>(user);
+                    return _mapper.Map<UserUpdateDto>(user);
                 }
 
                 return null;
@@ -86,10 +86,15 @@ namespace ProEventos.Application
                 var user = await _userPersistence.GetUserByUserNameAsync(userUpdateDto.UserName);
                 if (user == null) return null;
 
+                userUpdateDto.Id = user.Id;
+
                 _mapper.Map(userUpdateDto, user);
 
-                var token = await _userManager.GeneratePasswordResetTokenAsync(user); //reseta um token para que o usuario seja deslogado e gere um novo token
-                var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password); // pra funcionar tem que adicionar o .AddDefaultTokenProviders no startup.
+                if (userUpdateDto.Password != null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user); //reseta um token para que o usuario seja deslogado e gere um novo token
+                    await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password); // pra funcionar tem que adicionar o .AddDefaultTokenProviders no startup.
+                }
 
                 _userPersistence.Update<User>(user);
                 if (await _userPersistence.SaveChangesAsync())
@@ -120,5 +125,7 @@ namespace ProEventos.Application
                 throw new Exception($"Erro ao tentar verificar se o usuário existe. Erro: {ex.Message}", ex);
             }
         }
+
+
     }
 }

@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
@@ -34,6 +34,9 @@ import { EventoService } from './services/evento.service';
 import { LoteService } from './services/lote.service';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { Constants } from './util/constants';
+import { AccountService } from './services/account.service';
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
+import { HomeComponent } from './components/home/home.component';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -54,7 +57,8 @@ defineLocale('pt-br', ptBrLocale);
     UserComponent,
     LoginComponent,
     RegistrationComponent,
-   ],
+    HomeComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -77,8 +81,10 @@ defineLocale('pt-br', ptBrLocale);
     NgxCurrencyModule.forRoot(Constants.CustomCurrencyMaskConfig),
   ],
   providers: [
+    AccountService,
     EventoService,
-    LoteService
+    LoteService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
@@ -86,4 +92,4 @@ defineLocale('pt-br', ptBrLocale);
 export class AppModule {
 
 
- }
+}
